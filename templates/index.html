@@ -1,146 +1,33 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Disease Prediction System</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" 
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <!-- Select2 CSS for searchable dropdown -->
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
-  <style>
-    body {
-      padding-top: 80px;
-      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-      font-family: 'Poppins', sans-serif;
-    }
-    .navbar-brand {
-      font-weight: bold;
-      font-size: 1.5rem;
-      color: #fff !important;
-    }
-    .container {
-      background: #fff;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-      margin-bottom: 40px;
-    }
-    .form-group label {
-      font-weight: 600;
-      color: #495057;
-    }
-    .btn-primary {
-      font-size: 1.1rem;
-      padding: 12px 24px;
-      background: linear-gradient(135deg, #007bff, #0056b3);
-      border: none;
-      transition: all 0.3s ease;
-    }
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-    }
-    .alert {
-      font-size: 1.2rem;
-      font-weight: bold;
-      border-radius: 8px;
-      padding: 20px;
-    }
-    .alert-success {
-      background: linear-gradient(135deg, #28a745, #218838);
-      color: #fff;
-      border: none;
-    }
-    .footer {
-      text-align: center;
-      padding: 20px;
-      background: #007bff;
-      color: #fff;
-      font-size: 0.9rem;
-      margin-top: 40px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    .footer a {
-      color: #fff;
-      text-decoration: underline;
-    }
-    .footer a:hover {
-      color: #e9ecef;
-    }
-    h2 {
-      color: #007bff;
-      font-weight: 600;
-      margin-bottom: 20px;
-    }
-    p.text-muted {
-      color: #6c757d !important;
-    }
-    .select2-container--default .select2-selection--multiple {
-      border: 1px solid #ced4da;
-      border-radius: 8px;
-      padding: 5px;
-    }
-    .select2-container--default .select2-selection--multiple .select2-selection__choice {
-      background: #007bff;
-      border: none;
-      color: #fff;
-      border-radius: 4px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ai_Doc - Disease Prediction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <!-- Navigation Bar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-    <a class="navbar-brand" href="#">Disease Prediction System</a>
-  </nav>
+<body class="bg-blue-50 text-gray-900">
+    <div class="min-h-screen flex flex-col items-center justify-center p-4">
+        <h1 class="text-4xl font-bold text-blue-600 mb-6">Ai_Doc - Disease Prediction</h1>
+        <form action="/predict" method="post" class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <label for="symptoms" class="block text-lg font-semibold mb-2">Select Symptoms:</label>
+            <div class="grid grid-cols-2 gap-2 mb-4">
+                {% for symptom in symptoms %}
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" name="symptoms" value="{{ symptom }}" class="rounded text-blue-500">
+                    <span>{{ symptom }}</span>
+                </label>
+                {% endfor %}
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Predict</button>
+        </form>
 
-  <!-- Main Container -->
-  <div class="container mt-5">
-    <h2 class="text-center mb-4">AI-Powered Disease Prediction</h2>
-    <p class="text-center text-muted">Select your symptoms below, and our AI model will predict the most likely disease.</p>
-
-    <!-- Symptom Selection Form -->
-    <form method="POST">
-      <div class="form-group">
-        <label for="symptom-select">Select Symptoms:</label>
-        <select id="symptom-select" name="symptoms" class="form-control" multiple>
-          {% for symptom in symptoms %}
-            <option value="{{ symptom }}">{{ symptom }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <button type="submit" class="btn btn-primary btn-block">Predict Disease</button>
-    </form>
-
-    <!-- Prediction Result -->
-    {% if prediction %}
-      <div class="alert alert-success text-center mt-4">
-        <h4>Prediction Result</h4>
-        <p>Our AI model predicts: <strong>{{ prediction }}</strong></p>
-      </div>
-    {% endif %}
-  </div>
-
-  <!-- Footer Section -->
-  <footer class="footer">
-    <p>This project was created by <a href="https://github.com/AnnNaserNabil" target="_blank">Ann Naser Nabil</a>.</p>
-  </footer>
-
-  <!-- Scripts -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
-  <script>
-    $(document).ready(function() {
-      $("#symptom-select").select2({
-        placeholder: "Start typing to search symptoms...",
-        allowClear: true
-      });
-    });
-  </script>
+        {% if prediction %}
+        <div class="mt-6 bg-green-100 p-4 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold text-green-700">Prediction:</h2>
+            <p class="text-lg text-green-800">{{ prediction }}</p>
+        </div>
+        {% endif %}
+    </div>
 </body>
 </html>

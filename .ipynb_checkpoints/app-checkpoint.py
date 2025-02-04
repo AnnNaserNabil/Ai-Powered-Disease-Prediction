@@ -1,15 +1,12 @@
 from flask import Flask, render_template, request
 import joblib
 import numpy as np
-import pandas as pd
 
 app = Flask(__name__)
 
 # Load the trained model
+# Ensure the file path matches your model file
 model = joblib.load('disease_prediction_model.joblib')
-
-# Load the merged dataset (Symptom → Disease → Drug)
-merged_df = pd.read_csv("merged_dataset.csv")
 
 # List of symptoms (features) in the order expected by your model
 symptoms_list = [
@@ -46,8 +43,6 @@ symptoms_list = [
 @app.route('/', methods=['GET', 'POST'])
 def index():
     prediction = None
-    drug = None  # Variable for drug recommendation
-
     if request.method == 'POST':
         # Get the list of selected symptoms from the form
         selected_symptoms = request.form.getlist('symptoms')
@@ -58,14 +53,8 @@ def index():
         # Convert to a numpy array and reshape for prediction
         input_array = np.array(input_vector).reshape(1, -1)
         
-        # Predict the disease
-        predicted_disease = model.predict(input_array)[0]
-
-        # Fetch the drug recommendation for the predicted disease
-        drug_info = merged_df[merged_df["Disease"] == predicted_disease]["Drugs"].values
-        drug = drug_info[0] if len(drug_info) > 0 else "No drug information available"
-
-        prediction = f"{predicted_disease} (Suggested Drug: {drug})"
+        # Use the model to predict the disease
+        prediction = model.predict(input_array)[0]
     
     return render_template('index.html', symptoms=symptoms_list, prediction=prediction)
 

@@ -9,7 +9,7 @@ app = Flask(__name__)
 model = joblib.load('disease_prediction_model.joblib')
 
 # Load the merged dataset (Symptom → Disease → Drug)
-merged_df = pd.read_csv("merged_dataset.csv")
+merged_df = pd.read_csv("symptom-disease-drug.csv")
 
 # List of symptoms (features) in the order expected by your model
 symptoms_list = [
@@ -62,7 +62,7 @@ def index():
         predicted_disease = model.predict(input_array)[0]
 
         # Fetch the drug recommendation for the predicted disease
-        drug_info = merged_df[merged_df["Mapped_Disease"] == predicted_disease]["drugs"].values
+        drug_info = merged_df[merged_df["Mapped_Disease"] == predicted_disease]["drug"].values
         drug = drug_info[0] if len(drug_info) > 0 else "No drug information available"
 
         prediction = f"{predicted_disease} (Suggested Drug: {drug})"

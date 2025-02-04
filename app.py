@@ -62,7 +62,7 @@ def index():
         predicted_disease = model.predict(input_array)[0]
 
         # Fetch the drug recommendation for the predicted disease
-        drug_info = merged_df[merged_df["Disease"] == predicted_disease]["Drugs"].values
+        drug_info = merged_df[merged_df["Mapped_Disease"] == predicted_disease]["Drugs"].values
         drug = drug_info[0] if len(drug_info) > 0 else "No drug information available"
 
         prediction = f"{predicted_disease} (Suggested Drug: {drug})"

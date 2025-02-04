@@ -1,0 +1,6 @@
+flask
+numpy
+joblib
+huggingface_hub
+gunicorn
+scikit-learn

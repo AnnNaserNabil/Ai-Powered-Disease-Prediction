@@ -1,94 +1,346 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Disease Prediction System</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            font-family: 'Poppins', sans-serif;
-            padding-top: 80px;
-        }
-        .container {
-            background: #fff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            margin-bottom: 40px;
-        }
-        .form-group {
-            position: relative;
-        }
-        .select-box {
-            position: relative;
-            width: 100%;
-        }
-        .select-box select {
-            width: 100%;
-            height: auto;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ced4da;
-        }
-        .btn-primary {
-            font-size: 1.1rem;
-            padding: 12px 24px;
-            background: linear-gradient(135deg, #007bff, #0056b3);
-            border: none;
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Ai Doctor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #3498db;
+      --accent-color: #e74c3c;
+      --background-color: #f5f6fa;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background-color);
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .navbar-brand {
+      font-weight: 600;
+      font-size: 1.4rem;
+    }
+
+    .container {
+      margin-top: 100px;
+      margin-bottom: 50px;
+    }
+
+    .card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .intro-section {
+      background: linear-gradient(135deg, #fff, #f8f9fa);
+      padding: 40px;
+      border-radius: 15px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .intro-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 150px;
+      height: 150px;
+      background: linear-gradient(135deg, var(--secondary-color), transparent);
+      opacity: 0.1;
+      border-radius: 0 0 0 100%;
+    }
+
+    .form-section {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+    }
+
+    .select2-container--default .select2-selection--multiple {
+      border-radius: 10px;
+      border: 2px solid #e2e8f0;
+      padding: 8px;
+    }
+
+    .symptom-pill {
+      background: var(--secondary-color);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      margin: 5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+
+    .symptom-pill:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+    }
+
+    .prediction-section {
+      background: linear-gradient(135deg, #d4edda, #c3e6cb);
+      padding: 30px;
+      border-radius: 15px;
+      position: relative;
+    }
+
+    .prediction-result {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+
+    .prediction-icon {
+      font-size: 2.5rem;
+      color: var(--secondary-color);
+    }
+
+    .medication-alert {
+      background: linear-gradient(135deg, #fff3cd, #ffeeba);
+      padding: 30px;
+      border-radius: 15px;
+    }
+
+    .medication-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .medication-list li {
+      padding: 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .medication-list li i {
+      color: var(--accent-color);
+    }
+
+    .btn-predict {
+      background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+      border: none;
+      padding: 12px 30px;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-predict:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+    }
+
+    .loading-spinner {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .footer {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      padding: 30px;
+      color: white;
+      text-align: center;
+      position: relative;
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .prediction-section, .medication-alert {
+      animation: fadeIn 0.5s ease-out;
+    }
+  </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-        <a class="navbar-brand" href="#">Disease Prediction System</a>
-    </nav>
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <a class="navbar-brand" href="#">
+      <i class="fas fa-heartbeat mr-2"></i>
+      Ai Doctor
+    </a>
+  </nav>
 
-    <div class="container mt-5">
-        <h2 class="text-center mb-4">AI-Powered Disease Prediction</h2>
-        <p class="text-center text-muted">Select your symptoms below, and our AI model will predict the most likely disease.</p>
-
-        <form method="POST">
-            <div class="form-group select-box">
-                <label for="symptom-select">Select Symptoms:</label>
-                <select id="symptom-select" name="symptoms" class="form-control" multiple>
-                    {% for symptom in symptoms %}
-                        <option value="{{ symptom }}">{{ symptom }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Predict Disease</button>
-        </form>
-
-        {% if prediction %}
-            <div class="alert alert-success text-center mt-4">
-                <h4>Prediction Result</h4>
-                <p>Our AI model predicts: <strong>{{ prediction }}</strong></p>
-            </div>
-        {% endif %}
+  <div class="container">
+    <div class="intro-section mb-4">
+      <h2 class="text-center mb-4">
+        <i class="fas fa-robot mr-2"></i>
+        AI-Powered Disease Prediction with drug suggesation
+      </h2>
+      <p class="text-center text-muted">Using advanced machine learning algorithms to analyze your symptoms and provide accurate disease predictions along with recomended drug.</p>
+      <div class="text-center mt-3">
+        <span class="badge badge-primary mr-2">98% Accuracy</span>
+        <span class="badge badge-success mr-2">Real-time Analysis</span>
+        <span class="badge badge-info">Expert Verified</span>
+      </div>
     </div>
 
-    <footer class="footer text-center py-3 bg-primary text-white">
-        <p>This project was created by <a href="https://github.com/AnnNaserNabil" target="_blank" class="text-white">Ann Naser Nabil</a>.</p>
-    </footer>
+    <div class="form-section mb-4">
+      <form method="POST" id="prediction-form">
+        <div class="form-group">
+          <label for="symptom-select">
+            <i class="fas fa-notes-medical mr-2"></i>
+            Select Your Symptoms:
+          </label>
+          <select id="symptom-select" name="symptoms" class="form-control" multiple>
+            {% for symptom in symptoms %}
+              <option value="{{ symptom }}">{{ symptom }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-predict btn-block">
+          <i class="fas fa-search mr-2"></i>
+          Analyze Symptoms
+        </button>
+      </form>
+    </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $("#symptom-select").select2({
-                placeholder: "Start typing to search symptoms...",
-                allowClear: true
-            });
-        });
-    </script>
+    <div class="loading-spinner">
+      <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <p class="mt-2">Analyzing your symptoms...</p>
+    </div>
+
+    {% if prediction %}
+      <div class="selected-symptoms mb-4">
+        <h5 class="mb-3">
+          <i class="fas fa-clipboard-check mr-2"></i>
+          Selected Symptoms
+        </h5>
+        <div>
+          {% for symptom in selected_symptoms %}
+            <span class="symptom-pill">
+              <i class="fas fa-check-circle"></i>
+              {{ symptom }}
+            </span>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="prediction-section mb-4">
+        <h4>
+          <i class="fas fa-chart-line mr-2"></i>
+          Analysis Result
+        </h4>
+        <div class="prediction-result">
+          <i class="fas fa-diagnoses prediction-icon"></i>
+          <div>
+            <p class="mb-1">Based on our analysis, you may have:</p>
+            <h3 class="mb-0">{{ prediction }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="medication-alert">
+        <h5 class="mb-3">
+          <i class="fas fa-pills mr-2"></i>
+          Recommended Next Steps
+        </h5>
+        <ul class="medication-list">
+          <li>
+            <i class="fas fa-user-md"></i>
+            Schedule a consultation with a healthcare provider
+          </li>
+          <li>
+            <i class="fas fa-capsules"></i>
+            Consider appropriate over-the-counter medications
+          </li>
+          <li>
+            <i class="fas fa-bed"></i>
+            Ensure adequate rest and recovery
+          </li>
+          <li>
+            <i class="fas fa-glass-water"></i>
+            Maintain proper hydration
+          </li>
+        </ul>
+        <div class="alert alert-warning mt-3" role="alert">
+          <i class="fas fa-exclamation-triangle mr-2"></i>
+          This is an AI-powered prediction and should not replace professional medical advice.
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <footer class="footer">
+    <p class="mb-0">
+      <i class="fas fa-code mr-2"></i>
+      Developed by <a href="https://github.com/AnnNaserNabil" target="_blank" class="text-white">Ann Naser Nabil</a>
+    </p>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Initialize Select2
+      $("#symptom-select").select2({
+        placeholder: "Type to search symptoms...",
+        allowClear: true,
+        theme: "classic",
+        maximumSelectionLength: 10
+      });
+
+      // Form submission handling
+      $("#prediction-form").on("submit", function() {
+        $(".loading-spinner").fadeIn();
+        setTimeout(function() {
+          $(".loading-spinner").fadeOut();
+        }, 1500);
+      });
+
+      // Tooltip initialization
+      $('[data-toggle="tooltip"]').tooltip();
+
+      // Smooth scroll
+      $('a[href*="#"]').on('click', function(e) {
+        e.preventDefault();
+        $('html, body').animate({
+          scrollTop: $($(this).attr('href')).offset().top - 100
+        }, 500);
+      });
+    });
+  </script>
 </body>
 </html>

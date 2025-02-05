@@ -4,3 +4,4 @@ joblib
 huggingface_hub
 gunicorn
 scikit-learn
+pandas
